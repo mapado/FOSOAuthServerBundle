@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": "^7.2 || ^8.1",
-        "friendsofsymfony/oauth2-php": "dev-update-symfony-6-4",
+        "friendsofsymfony/oauth2-php": "dev-master#41f6802",
         "symfony/dependency-injection": "^4.4 || ^5.1 || ^6.1",
         "symfony/framework-bundle": "^4.4 || ^5.1 || ^6.1",
         "symfony/security-bundle": "^4.4 || ^5.1 || ^6.1",
