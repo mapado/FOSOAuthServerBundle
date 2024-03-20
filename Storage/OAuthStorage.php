@@ -28,7 +28,7 @@ use OAuth2\Model\IOAuth2Client;
 use OAuth2\OAuth2;
 use OAuth2\OAuth2ServerException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -60,9 +60,9 @@ class OAuthStorage implements IOAuth2RefreshTokens, IOAuth2GrantUser, IOAuth2Gra
     protected $userProvider;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var PasswordHasherFactoryInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasher;
 
     /**
      * @var array [uri] => GrantExtensionInterface
@@ -71,14 +71,14 @@ class OAuthStorage implements IOAuth2RefreshTokens, IOAuth2GrantUser, IOAuth2Gra
 
     public function __construct(ClientManagerInterface $clientManager, AccessTokenManagerInterface $accessTokenManager,
         RefreshTokenManagerInterface $refreshTokenManager, AuthCodeManagerInterface $authCodeManager,
-        UserProviderInterface $userProvider = null, EncoderFactoryInterface $encoderFactory = null)
+        UserProviderInterface $userProvider = null, PasswordHasherFactoryInterface $passwordHasher = null)
     {
         $this->clientManager = $clientManager;
         $this->accessTokenManager = $accessTokenManager;
         $this->refreshTokenManager = $refreshTokenManager;
         $this->authCodeManager = $authCodeManager;
         $this->userProvider = $userProvider;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasher = $passwordHasher;
 
         $this->grantExtensions = [];
     }
@@ -157,8 +157,8 @@ class OAuthStorage implements IOAuth2RefreshTokens, IOAuth2GrantUser, IOAuth2Gra
             return false;
         }
 
-        $encoder = $this->encoderFactory->getEncoder($user);
-        if ($encoder->isPasswordValid($user->getPassword(), $password, $user->getSalt())) {
+        $hasher = $this->passwordHasher->getPasswordHasher($user);
+        if ($hasher->verify($user->getPassword(), $password)) {
             return [
                 'data' => $user,
             ];

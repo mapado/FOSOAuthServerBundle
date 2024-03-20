@@ -18,7 +18,6 @@ use OAuth2\OAuth2;
 use OAuth2\OAuth2AuthenticateException;
 use OAuth2\OAuth2ServerException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -30,7 +29,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  *
  * @author  Arnaud Le Blanc <arnaud.lb@gmail.com>
  */
-class OAuthProvider implements AuthenticationProviderInterface
+class OAuthProvider
 {
     /**
      * @var UserProviderInterface
@@ -102,7 +101,6 @@ class OAuthProvider implements AuthenticationProviderInterface
             $roles = array_unique($roles, SORT_REGULAR);
 
             $token = new OAuthToken($roles);
-            $token->setAuthenticated(true);
             $token->setToken($tokenString);
 
             if (null !== $user) {
